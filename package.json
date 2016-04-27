@@ -1,0 +1,24 @@
+{
+  "name": "mobile_slide",
+  "version": "1.0.0",
+  "description": "slide",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mobile",
+    "slide",
+    "touch"
+  ],
+  "author": "chen8840",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-newer": "^1.2.0"
+  }
+}
