@@ -68,3 +68,5 @@ slide for mobile device,support tencent x5,translate touch event to mouse event 
 	</script>
 </body>
 </html>
+```
+## [DEMO](http://chen8840.github.io/mobileSilde/)
