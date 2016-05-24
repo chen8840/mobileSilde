@@ -17,10 +17,14 @@
 			ul.children[i].style.position = 'relative';
 			if(i !== 0) ul.children[i].style.display = 'none';
 		}
+
 		//add event
 		(function() {
 			var startx,starty,delx,dely;
 			var silde = new HorizontalSlide(ul);
+			if(options && options.afterTransitionFunc) {
+				options.afterTransitionFunc(silde.getCurrentIndex(), ul.children.length);
+			}
 			createTouchEvent(ul,'touchstart',function(e, x, y) {
 				//for QQ X5
 				if(is_weixin()) {
@@ -47,6 +51,9 @@
 				}
 				silde.transition(delx, dely, function() {
 					startx = starty = delx = dely = undefined;
+					if(options && options.afterTransitionFunc) {
+						options.afterTransitionFunc(silde.getCurrentIndex(), ul.children.length); 
+					}
 				});
 			});
 		})();
