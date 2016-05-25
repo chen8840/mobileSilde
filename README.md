@@ -21,6 +21,10 @@ slide for mobile device,support tencent x5,translate touch event to mouse event 
 		line-height: 200px;
 		text-align: center;
 		font-size: 80px;
+		-webkit-user-select:none;
+		-moz-user-select:none;
+		-o-user-select:none;
+		user-select:none;
 	}
 	li:nth-child(1) {
 		background-color: #eee;

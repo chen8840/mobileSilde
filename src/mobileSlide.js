@@ -272,8 +272,8 @@
 					e.addEventListener('mousemove', function(event) {if(e._mousedown) func(event,event.clientX,event.clientY);}, false);
 					break;
 					case 'touchend':
-					e.addEventListener('mouseup', function(event) {e._mousedown = false;func(event,event.clientX,event.clientY);}, false);
-					e.addEventListener('mouseout', function(event) {e._mousedown = false;func(event,event.clientX,event.clientY);}, false);
+					e.addEventListener('mouseup', function(event) {if(e._mousedown) {e._mousedown = false;func(event,event.clientX,event.clientY);}}, false);
+					e.addEventListener('mouseout', function(event) {if(e._mousedown) {e._mousedown = false;func(event,event.clientX,event.clientY);}}, false);
 					break;
 				}
 			}
