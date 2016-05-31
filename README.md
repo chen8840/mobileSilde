@@ -68,7 +68,9 @@ slide for mobile device,support tencent x5,translate touch event to mouse event 
 			}
 			mobileSlide(document.getElementById('slide1'));
 			mobileSlide(document.getElementById('slide2'));
-			mobileSlide(document.getElementById('slide3'));
+			mobileSlide(document.getElementById('slide3'), {
+				direction: 'vertical'
+			});
 			mobileSlide(document.getElementById('slide4'), {
 				afterTransitionFunc: instructSlide
 			});

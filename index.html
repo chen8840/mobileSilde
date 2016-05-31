@@ -63,7 +63,9 @@
 			}
 			mobileSlide(document.getElementById('slide1'));
 			mobileSlide(document.getElementById('slide2'));
-			mobileSlide(document.getElementById('slide3'));
+			mobileSlide(document.getElementById('slide3'), {
+				direction: 'vertical'
+			});
 			mobileSlide(document.getElementById('slide4'), {
 				afterTransitionFunc: instructSlide
 			});

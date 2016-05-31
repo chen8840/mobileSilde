@@ -20,8 +20,12 @@
 
 		//add event
 		(function() {
-			var startx,starty,delx,dely;
-			var silde = new HorizontalSlide(ul);
+			var startx,starty,delx,dely,silde;
+			if(options && options.direction === 'vertical') {
+				silde = new VerticalSlide(ul);
+			} else {
+				silde = new HorizontalSlide(ul);
+			}
 			if(options && options.afterTransitionFunc) {
 				options.afterTransitionFunc(silde.getCurrentIndex(), ul.children.length);
 			}
@@ -73,6 +77,9 @@
 		//function move(delx,dely)
 		//function transition(delx,dely)
 		//function getCurrentIndex()
+	}
+
+	function HorizontalSlide(ul) {
 		//function _hideNext()
 		//function _showPrev()
 		//function _hidePrev()
@@ -80,9 +87,6 @@
 		
 		//function _setTransitionFlag()
 		//function _clearTransitionFlag()
-	}
-
-	function HorizontalSlide(ul) {
 		this._ul = ul;
 		this._currentIndex = this._prevLi = this._nextLi = this._curLi = undefined;
 		this._transitionFlag = false;
@@ -232,6 +236,166 @@
 		});
 	};
 
+	function VerticalSlide(ul) {
+		//function _hideNext()
+		//function _showPrev()
+		//function _hidePrev()
+		//function _showNext()
+		
+		//function _setTransitionFlag()
+		//function _clearTransitionFlag()
+		this._ul = ul;
+		this._currentIndex = this._prevLi = this._nextLi = this._curLi = undefined;
+		this._transitionFlag = false;
+	}
+	inheritPrototype(VerticalSlide,sildeInterface);
+
+	VerticalSlide.prototype.getCurrentIndex = function() {
+		if(this._transitionFlag) return;
+		for(var i = 0; i < this._ul.children.length; i++) {
+			if(this._ul.children[i].style.display != 'none' && this._ul.children[i].style.position == 'relative') {
+				if(i !== this._currentIndex) {
+					this._prevLi = i <= 0 ? this._ul.children[this._ul.children.length - 1] : this._ul.children[i - 1];
+					this._nextLi = i >= (this._ul.children.length - 1) ? this._ul.children[0] : this._ul.children[i + 1];
+					this._curLi = this._ul.children[i];
+					this._currentIndex = i;
+				}
+				return this._currentIndex;
+			}
+		}
+		throw "Can not find active ul.";
+	};
+	VerticalSlide.prototype._hideNext = function() {
+		if(this._currentIndex === undefined) {
+			return;
+		}
+		this._nextLi.style.display = 'none';
+		this._nextLi.style.position = 'relative';
+		this._nextLi.style.top = '';
+		this._nextLi.style.width = '';
+		this._nextLi.style.Height = '';
+		this._nextLi.style.left = '';
+	};
+	VerticalSlide.prototype._showNext = function() {
+		if(this._currentIndex === undefined) {
+			return;
+		}
+		this._nextLi.style.display = 'block';
+		this._nextLi.style.position = 'absolute';
+		this._nextLi.style.top = '100%';
+		this._nextLi.style.width = '100%';
+		this._nextLi.style.Height = '100%';
+		this._nextLi.style.left = '0';
+	};
+	VerticalSlide.prototype._showPrev = function() {
+		if(this._currentIndex === undefined) {
+			return;
+		}
+		this._prevLi.style.display = 'block';
+		this._prevLi.style.position = 'absolute';
+		this._prevLi.style.top = '-100%';
+		this._prevLi.style.width = '100%';
+		this._prevLi.style.Height = '100%';
+		this._prevLi.style.left = '0';
+	};
+	VerticalSlide.prototype._hidePrev = function() {
+		if(this._currentIndex === undefined) {
+			return;
+		}
+		this._prevLi.style.display = 'none';
+		this._prevLi.style.position = 'relative';
+		this._prevLi.style.top = '';
+		this._prevLi.style.width = '';
+		this._prevLi.style.Height = '';
+		this._prevLi.style.left = '';
+	};
+	VerticalSlide.prototype._setTransitionFlag = function() {
+		this._transitionFlag = true;
+	};
+	VerticalSlide.prototype._clearTransitionFlag = function() {
+		this._transitionFlag = false;
+	};
+	VerticalSlide.prototype.move = function(delx, dely) {
+		if(this._transitionFlag) return;
+		if(dely > 0 && Math.abs(dely) <= this._ul.clientHeight) {
+			if(this._nextLi !== this._prevLi) {
+				this._hideNext();
+			}
+			if(this._prevLi.style.display == 'none') {
+				this._showPrev();
+			}
+			this._prevLi.style.top = (-this._prevLi.offsetHeight + dely) + 'px';
+			this._curLi.style.top = dely + 'px';
+		} else if(dely < 0 && Math.abs(dely) <= this._ul.clientHeight) {
+			if(this._nextLi !== this._prevLi) {
+				this._hidePrev();
+			}
+			if(this._nextLi.style.display == 'none') {
+				this._showNext();
+			}
+			this._nextLi.style.top = (this._nextLi.offsetHeight + dely) + 'px';
+			this._curLi.style.top = dely + 'px';
+		}
+	};
+	VerticalSlide.prototype.transition = function(delx, dely, callback) {
+		
+		if(this._transitionFlag) return;
+		if(this._currentIndex === undefined) return;
+		if(!dely) return;
+		var willRestore = Math.abs(dely) <= this._ul.clientHeight * 0.2,
+			prevMove = dely > 0,
+			curLi = this._curLi,
+			nextCurLi,
+			me = this;
+		if(prevMove) {
+			nextCurLi = this._prevLi;
+			curLi.style.transition = nextCurLi.style.transition = curLi.style.webkitTransition = nextCurLi.style.webkitTransition = '.6s ease all';
+			if(willRestore) {
+				nextCurLi.style.top = -this._ul.clientHeight + 'px';
+				curLi.style.top = '0px';
+			} else {
+				nextCurLi.style.top = '0px';
+				curLi.style.top = this._ul.clientHeight + 'px';
+			}
+		} else {
+			nextCurLi = this._nextLi;
+			curLi.style.transition = nextCurLi.style.transition = curLi.style.webkitTransition = nextCurLi.style.webkitTransition = '.6s ease all';
+			if(willRestore) {
+				nextCurLi.style.top = this._ul.clientHeight + 'px';
+				curLi.style.top = '0px';
+			} else {
+				nextCurLi.style.top = '0px';
+				curLi.style.top = -this._ul.clientHeight + 'px';
+			}
+		}
+		this._setTransitionFlag();
+		addOneTransitionendEvent(curLi, function() {
+			curLi.style.transition = curLi.style.webkitTransition = '';
+			if(willRestore) {
+				curLi.style.top = '';
+			} else {
+				curLi.style.display = 'none';
+				curLi.style.position = 'relative';
+				curLi.style.top = curLi.style.width = curLi.style.left = '';
+			}
+			me._clearTransitionFlag();
+			if(callback) callback();
+		});
+		addOneTransitionendEvent(nextCurLi,function() {
+			nextCurLi.style.transition = nextCurLi.style.webkitTransition = '';
+			if(willRestore) {
+				nextCurLi.style.display = 'none';
+				nextCurLi.style.position = 'relative';
+				nextCurLi.style.left = nextCurLi.style.top = nextCurLi.style.width = nextCurLi.style.height = '';
+			} else {
+				nextCurLi.style.left = nextCurLi.style.top = nextCurLi.style.width = nextCurLi.style.width = '';
+				nextCurLi.style.display = 'block';
+				nextCurLi.style.position = 'relative';
+			}
+			me._clearTransitionFlag();
+			if(callback) callback();
+		});
+	};
 	function addOneTransitionendEvent(el, handle) {
 		function _handle(event) {
 			handle(event);
