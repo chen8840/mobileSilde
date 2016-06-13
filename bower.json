@@ -1,0 +1,23 @@
+{
+  "name": "mobile_slide",
+  "description": "slide",
+  "main": "",
+  "authors": [
+    "chen8840"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "mobile",
+    "slide",
+    "touch"
+  ],
+  "homepage": "https://github.com/chen8840/mobileSilde",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
