@@ -53,6 +53,9 @@
 				if(options && options.stopPropagation) {
 					e.stopPropagation();
 				}
+				if(options && options.beforeTransitionFunc) {
+					options.beforeTransitionFunc(silde.getCurrentIndex(), ul.children.length);
+				}
 				silde.transition(delx, dely, function() {
 					startx = starty = delx = dely = undefined;
 					if(options && options.afterTransitionFunc) {
@@ -208,6 +211,7 @@
 			}
 		}
 		this._setTransitionFlag();
+		var otherFinished = false;
 		addOneTransitionendEvent(curLi, function() {
 			curLi.style.transition = curLi.style.webkitTransition = '';
 			if(willRestore) {
@@ -218,7 +222,11 @@
 				curLi.style.top = curLi.style.width = curLi.style.left = '';
 			}
 			me._clearTransitionFlag();
-			if(callback) callback();
+			if(callback && otherFinished) {
+				callback();
+			} else {
+				otherFinished = true;
+			}
 		});
 		addOneTransitionendEvent(nextCurLi,function() {
 			nextCurLi.style.transition = nextCurLi.style.webkitTransition = '';
@@ -232,7 +240,11 @@
 				nextCurLi.style.position = 'relative';
 			}
 			me._clearTransitionFlag();
-			if(callback) callback();
+			if(callback && otherFinished) {
+				callback();
+			} else {
+				otherFinished = true;
+			}
 		});
 	};
 
@@ -369,6 +381,7 @@
 			}
 		}
 		this._setTransitionFlag();
+		var otherFinished = false;
 		addOneTransitionendEvent(curLi, function() {
 			curLi.style.transition = curLi.style.webkitTransition = '';
 			if(willRestore) {
@@ -379,7 +392,11 @@
 				curLi.style.top = curLi.style.width = curLi.style.left = '';
 			}
 			me._clearTransitionFlag();
-			if(callback) callback();
+			if(callback && otherFinished) {
+				callback();
+			} else {
+				otherFinished = true;
+			}
 		});
 		addOneTransitionendEvent(nextCurLi,function() {
 			nextCurLi.style.transition = nextCurLi.style.webkitTransition = '';
@@ -393,7 +410,11 @@
 				nextCurLi.style.position = 'relative';
 			}
 			me._clearTransitionFlag();
-			if(callback) callback();
+			if(callback && otherFinished) {
+				callback();
+			} else {
+				otherFinished = true;
+			}
 		});
 	};
 	function addOneTransitionendEvent(el, handle) {
