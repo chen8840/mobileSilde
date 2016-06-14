@@ -53,15 +53,21 @@
 				if(options && options.stopPropagation) {
 					e.stopPropagation();
 				}
-				if(options && options.beforeTransitionFunc) {
-					options.beforeTransitionFunc(silde.getCurrentIndex(), ul.children.length);
-				}
-				silde.transition(delx, dely, function() {
-					startx = starty = delx = dely = undefined;
-					if(options && options.afterTransitionFunc) {
-						options.afterTransitionFunc(silde.getCurrentIndex(), ul.children.length); 
+				silde.transition(
+					delx, 
+					dely, 
+					function() {
+						if(options && options.beforeTransitionFunc) {
+							options.beforeTransitionFunc(silde.getCurrentIndex(), ul.children.length); 
+						}
+					}, 
+					function() {
+						startx = starty = delx = dely = undefined;
+						if(options && options.afterTransitionFunc) {
+							options.afterTransitionFunc(silde.getCurrentIndex(), ul.children.length); 
+						}
 					}
-				});
+				);
 			});
 		})();
 	};
@@ -97,7 +103,7 @@
 	inheritPrototype(HorizontalSlide,sildeInterface);
 
 	HorizontalSlide.prototype.getCurrentIndex = function() {
-		if(this._transitionFlag) return;
+		if(this._transitionFlag) return this._currentIndex;
 		for(var i = 0; i < this._ul.children.length; i++) {
 			if(this._ul.children[i].style.display != 'none' && this._ul.children[i].style.position == 'relative') {
 				if(i !== this._currentIndex) {
@@ -179,7 +185,7 @@
 			this._curLi.style.left = delx + 'px';
 		}
 	};
-	HorizontalSlide.prototype.transition = function(delx, dely, callback) {
+	HorizontalSlide.prototype.transition = function(delx, dely, before, after) {
 		
 		if(this._transitionFlag) return;
 		if(this._currentIndex === undefined) return;
@@ -210,6 +216,9 @@
 				curLi.style.left = -this._ul.clientWidth + 'px';
 			}
 		}
+		if(before) {
+			before();
+		}
 		this._setTransitionFlag();
 		var otherFinished = false;
 		addOneTransitionendEvent(curLi, function() {
@@ -222,8 +231,8 @@
 				curLi.style.top = curLi.style.width = curLi.style.left = '';
 			}
 			me._clearTransitionFlag();
-			if(callback && otherFinished) {
-				callback();
+			if(after && otherFinished) {
+				after();
 			} else {
 				otherFinished = true;
 			}
@@ -240,8 +249,8 @@
 				nextCurLi.style.position = 'relative';
 			}
 			me._clearTransitionFlag();
-			if(callback && otherFinished) {
-				callback();
+			if(after && otherFinished) {
+				after();
 			} else {
 				otherFinished = true;
 			}
@@ -263,7 +272,7 @@
 	inheritPrototype(VerticalSlide,sildeInterface);
 
 	VerticalSlide.prototype.getCurrentIndex = function() {
-		if(this._transitionFlag) return;
+		if(this._transitionFlag) return this._currentIndex;
 		for(var i = 0; i < this._ul.children.length; i++) {
 			if(this._ul.children[i].style.display != 'none' && this._ul.children[i].style.position == 'relative') {
 				if(i !== this._currentIndex) {
@@ -349,7 +358,7 @@
 			this._curLi.style.top = dely + 'px';
 		}
 	};
-	VerticalSlide.prototype.transition = function(delx, dely, callback) {
+	VerticalSlide.prototype.transition = function(delx, dely, before, after) {
 		
 		if(this._transitionFlag) return;
 		if(this._currentIndex === undefined) return;
@@ -380,6 +389,9 @@
 				curLi.style.top = -this._ul.clientHeight + 'px';
 			}
 		}
+		if(before) {
+			before();
+		}
 		this._setTransitionFlag();
 		var otherFinished = false;
 		addOneTransitionendEvent(curLi, function() {
@@ -392,8 +404,8 @@
 				curLi.style.top = curLi.style.width = curLi.style.left = '';
 			}
 			me._clearTransitionFlag();
-			if(callback && otherFinished) {
-				callback();
+			if(after && otherFinished) {
+				after();
 			} else {
 				otherFinished = true;
 			}
@@ -410,8 +422,8 @@
 				nextCurLi.style.position = 'relative';
 			}
 			me._clearTransitionFlag();
-			if(callback && otherFinished) {
-				callback();
+			if(after && otherFinished) {
+				after();
 			} else {
 				otherFinished = true;
 			}
